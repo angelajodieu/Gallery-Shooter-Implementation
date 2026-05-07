@@ -1,5 +1,6 @@
 class MainGame extends Phaser.Scene{
     constructor(){
+        //note: ArrayBoom.js code example that the prof gave is used as reference (player movement, enemy spawn/collision check, updateScore)
         super("mainGame");
         this.my = {sprite:{}, text:{}};
 
@@ -228,7 +229,7 @@ class MainGame extends Phaser.Scene{
         }
 
         //handle collision for if the enemies hit the player
-        if(this.invincibilityTimer > 0){
+        if(this.invincibilityTimer > 0){ //make sure the frames are being checked (spaces out the hits)
             this.invincibilityTimer -= dt;
         }
 
