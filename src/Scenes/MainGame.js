@@ -69,6 +69,7 @@ class MainGame extends Phaser.Scene{
         my.sprite.player.health = 3;
         my.sprite.player.maxHealth = 3;
 
+        //making the cow characteristics (this one shoots)
         my.sprite.cow = this.add.sprite((Math.random()*game.config.width)/2, 80, "cow");
         my.sprite.cow.setScale(0.75);
         my.sprite.cow.health = 3;
@@ -80,18 +81,21 @@ class MainGame extends Phaser.Scene{
         my.sprite.cow.bulletTimer = 0;
         my.sprite.cow.bulletDelay = 2; //2 second delay
 
+        //making the chicken characteristics
         my.sprite.chicken = this.add.sprite((Math.random()*game.config.width)/2, 80, "chicken");
         my.sprite.chicken.setScale(0.50);
         my.sprite.chicken.health = 2;
         my.sprite.chicken.maxHealth = 2;
         my.sprite.chicken.scorePoints = 10;
 
+        //making the chick characteristics
         my.sprite.chick = this.add.sprite((Math.random()*game.config.width)/2, 80, "chick");
         my.sprite.chick.setScale(0.25);
         my.sprite.chick.health = 1;
         my.sprite.chick.maxHealth = 1;
         my.sprite.chick.scorePoints = 5;
 
+        //making the buffalo characteristics (buffalo and cow are the only enemies with weapons)
         my.sprite.buffalo = this.add.sprite((Math.random()*game.config.width)/2, 80, "buffalo");
         my.sprite.buffalo.health = 5;
         my.sprite.buffalo.maxHealth = 5;
@@ -130,7 +134,7 @@ class MainGame extends Phaser.Scene{
                 { key: "whitePuff02" },
                 { key: "whitePuff03" },
             ],
-            frameRate: 20,    // Note: case sensitive (thank you Ivy!)
+            frameRate: 20,    
             repeat: 5,
             hideOnComplete: true
         });
@@ -141,10 +145,12 @@ class MainGame extends Phaser.Scene{
         //sound for when player dies
         this.deathSound = this.sound.add('deathSound', {volume: 1});
 
+        //keyboard inputs
         this.left = this.input.keyboard.addKey("A");
         this.right = this.input.keyboard.addKey("D");
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+        //speed stuff
         this.playerSpeed = 300;
         this.bulletSpeed = 300;
         my.sprite.cow.speed = 25;
@@ -153,6 +159,7 @@ class MainGame extends Phaser.Scene{
         my.sprite.buffalo.speed = 20;
 
 
+        //description
         document.getElementById('description').innerHTML = '<h2>MainGame.js</h2><br>A: left // D: right // Space: fire/emit';
 
         //add background music
@@ -219,7 +226,7 @@ class MainGame extends Phaser.Scene{
 
                         this.star.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () =>{
                             enemy.visible = true;
-                            enemy.x = Math.random()*config.width;
+                            enemy.x = Math.random()*game.config.width;
                             enemy.y = 80;
                             enemy.health = enemy.maxHealth;
                         }, this);
@@ -233,7 +240,7 @@ class MainGame extends Phaser.Scene{
             this.invincibilityTimer -= dt;
         }
 
-        if(this.isDead == false){
+        if(this.isDead == false){//check if the player isn't dead
             for(let enemy of this.enemyGroup.getChildren()){
                 //checks if the enemy (animals) collide with the player
                 if(this.collides(enemy, my.sprite.player) && this.invincibilityTimer <= 0){
@@ -276,7 +283,7 @@ class MainGame extends Phaser.Scene{
             if(enemy == my.sprite.cow || enemy == my.sprite.buffalo){
                 enemy.bulletTimer += dt;
                 if(enemy.bulletTimer >= enemy.bulletDelay){
-                    let laserType = (enemy == my.sprite.cow) ? "cowLaser" : "buffaloLaser";//gets the laser type for the specific enemy
+                    let laserType = (enemy == my.sprite.cow) ? "cowLaser" : "buffaloLaser";//gets the laser type for the specific enemy (cow or buffalo)
 
                     if(enemy.bullet.length < enemy.maxBullets){
                         enemy.bullet.push(this.add.sprite(
@@ -293,7 +300,7 @@ class MainGame extends Phaser.Scene{
             }
             
             //checks if the sprites go offscreen (player misses them), spawns them back at top
-            if(enemy.y > game.config.height + 50){
+            if(enemy.y > game.config.height){
                 this.score -= enemy.scorePoints;
                 this.updateScore();
                 enemy.y = 80;
@@ -328,7 +335,7 @@ class MainGame extends Phaser.Scene{
 
         for(let enemy of this.enemyGroup.getChildren()){
             enemy.visible = true;
-            enemy.x = Math.random()*config.width;
+            enemy.x = Math.random()*game.config.width;
             enemy.y = 80;
             enemy.health = enemy.maxHealth;
         }
